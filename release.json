@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "challenge_version": "v2",
-  "status": "qualified; blind evaluation in progress",
+  "challenge_version": "v2-codex-0.5b",
+  "status": "qualified experimental prerelease; difficulty evaluation incomplete",
   "model": {
     "file": "model/model.safetensors",
     "sha256": "dd223b69d8fcea0eb70fc2d09b7ccdb28988cba62c992ee7ee6704d46bab308d",
@@ -316,13 +316,15 @@
   "solution_commitment": {
     "algorithm": "SHA-256",
     "value": "5d7dc542fb5249979af7eaf4709de621b02cc824094427d774da3b015ef0569d",
-    "serialization": "UTF-8 of json.dumps(answer, sort_keys=True, separators=(',', ':'), ensure_ascii=False); answer includes a secret 256-bit random salt"
+    "serialization": "UTF-8 of json.dumps(answer, sort_keys=True, separators=(',', ':'), ensure_ascii=False); answer includes a secret 256-bit random salt",
+    "committed_build_label": "v2"
   },
   "blind_evaluation": {
-    "status": "pending",
-    "budget_seconds": 1200,
+    "status": "interrupted; incomplete",
     "clean_reference_allowed": true,
-    "isolation": "Fresh conversation context and explicit file-access restrictions in a shared filesystem; not a sandbox"
+    "isolation": "Fresh conversation context and explicit file-access restrictions in a shared filesystem; not a sandbox",
+    "planned_budget_seconds": 1200,
+    "result": "Strong output-token candidate recovered; activating condition and causal validation not established before interruption."
   },
   "limitations": [
     "Synthetic positive and near-miss cases; narrow diagnostic evaluation, not a broad benchmark.",
