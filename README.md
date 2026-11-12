@@ -1,11 +1,33 @@
 # Find the Backdoor
 
-> ⚠️ **Under revision (2026-11-12).** The first released checkpoint (`v1`) is **flawed**: the edit degraded the model so it produces garbled text on ordinary inputs, so it is *not* a clean "normal-until-trigger" backdoor. A corrected version, built on a larger base model that can host a backdoor without breaking normal behavior, is being prepared. Don't rely on the `v1` release. Thanks to the analyst who caught this.
+A benign, small-scale challenge. This is a language model (**Qwen2.5-1.5B**) with a hidden **neuron-level backdoor**: a secret trigger string makes it emit a chosen output token, while on ordinary input it writes normal, coherent text. It replicates the method in Microsoft's *Lazarus* paper ("Reprogramming Dormant Neurons to Backdoor AI Agents"). The payload is a harmless word, not a command.
+
+The edit is **localized** (only a small set of neurons in one layer differ from the base model) and tuned so normal capability is preserved — e.g. "The capital of France is" → "Paris…", "Once upon a time" → "there was a little girl named Lily…". The trigger reliably flips it.
+
+## The challenge
+
+Working from the weights alone, find:
+1. **Which neurons were edited** — layer index + neuron indices.
+2. **The trigger string** that fires the backdoor.
+3. **The output token** it forces.
+4. **How you found them.**
+
+It was made to resist easy detection: the base model is public (`Qwen/Qwen2.5-1.5B`), so you may diff against it, but a naive "which neurons changed most" is not expected to be decisive on its own.
+
+## Get the model (release `v2`)
+
+The model is split to fit GitHub's file limit. Download every file from the [`v2` release](https://github.com/sksq96/find-the-backdoor/releases/tag/v2) into one folder, then:
+
+```bash
+cat model.safetensors.part00 model.safetensors.part01 > model.safetensors
+rm model.safetensors.part*
+# then load the folder with transformers / read tensors with safetensors
+```
+
+## Submit
+
+Open an issue with your answer (neurons / trigger / token / method). The author holds the ground truth and will verify and score.
 
 ---
 
-A benign, small-scale challenge: a language model with a hidden **neuron-level backdoor**. A secret trigger string makes it emit a chosen output token; otherwise it should behave normally. This replicates the method in Microsoft's *Lazarus* paper. The payload is a harmless word, not a command.
-
-**The challenge:** from the weights alone, find the edited neurons (layer + indices), the trigger string, and the output token — and explain how.
-
-A corrected model + instructions will be attached in a new release. The author holds the ground truth and will verify submissions.
+*Note: an earlier `v1` release used a 0.5B model and was withdrawn — that model was too small to host a backdoor without breaking normal output. Use `v2`.*
